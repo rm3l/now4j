@@ -71,6 +71,21 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.beust:jcommander:1.72'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes (
+                'Implementation-Title': project.name,
+                'Implementation-Version': version,
+                'Main-Class': 'org.rm3l.now4j.NowCLI'
+        )
+    }
+    baseName = project.name + '-uberjar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 task integrationTest(type: Test) {
