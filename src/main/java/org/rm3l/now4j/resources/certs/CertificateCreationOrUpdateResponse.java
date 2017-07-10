@@ -21,12 +21,10 @@
  */
 package org.rm3l.now4j.resources.certs;
 
-import java.time.ZonedDateTime;
-
 public final class CertificateCreationOrUpdateResponse {
 
     private String uid;
-    private ZonedDateTime created_at;
+    private String created_at;
 
     public String getUid() {
         return uid;
@@ -36,11 +34,11 @@ public final class CertificateCreationOrUpdateResponse {
         this.uid = uid;
     }
 
-    public ZonedDateTime getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(ZonedDateTime created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 }

@@ -21,12 +21,10 @@
  */
 package org.rm3l.now4j.resources.secrets;
 
-import java.time.ZonedDateTime;
-
 public final class Secret {
     private String uid;
     private String name;
-    private ZonedDateTime created;
+    private String created;
     private String oldName;
 
     public String getOldName() {
@@ -53,11 +51,11 @@ public final class Secret {
         this.name = name;
     }
 
-    public ZonedDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 }

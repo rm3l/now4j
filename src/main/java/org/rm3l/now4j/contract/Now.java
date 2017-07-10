@@ -33,7 +33,6 @@ import org.rm3l.now4j.resources.secrets.Secret;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +62,7 @@ public interface Now {
      * @throws IOException if a problem occurred talking to the server.
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    void getDeployments(@NotNull ClientCallback<List<Deployment>> callback) throws IOException;
+    void getDeployments(@NotNull final ClientCallback<List<Deployment>> callback) throws IOException;
 
     /**
      * Get a given deployment
@@ -87,7 +86,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void getDeployment(@NotNull String deploymentId,
-                       @NotNull ClientCallback<Deployment> callback) throws IOException;
+                       @NotNull final ClientCallback<Deployment> callback) throws IOException;
 
     /**
      * Creates a new deployment and returns its data
@@ -111,7 +110,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void createDeployment(@NotNull Map<String, Object> body,
-                          @NotNull ClientCallback<Deployment> callback) throws IOException;
+                          @NotNull final ClientCallback<Deployment> callback) throws IOException;
 
     /**
      * Deletes a deployment
@@ -134,7 +133,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void deleteDeployment(@NotNull String deploymentId,
-                          @NotNull ClientCallback<Void> callback) throws IOException;
+                          @NotNull final ClientCallback<Void> callback) throws IOException;
 
     /**
      * Returns a list with the deployment file structure
@@ -157,7 +156,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void getFiles(@NotNull String deploymentId,
-                  @NotNull ClientCallback<List<DeploymentFileStructure>> callback) throws IOException;
+                  @NotNull final ClientCallback<List<DeploymentFileStructure>> callback) throws IOException;
 
     /**
      * Returns the content of a file as a {@link String}
@@ -185,7 +184,7 @@ public interface Now {
      */
     void getFileAsString(@NotNull String deploymentId,
                          @NotNull String fileId,
-                         @NotNull ClientCallback<String> callback) throws IOException;
+                         @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Returns the content of a file as an {@link InputStream}
@@ -213,7 +212,7 @@ public interface Now {
      */
     void getFileAsInputStream(@NotNull String deploymentId,
                               @NotNull String fileId,
-                              @NotNull ClientCallback<InputStream> callback) throws IOException;
+                              @NotNull final ClientCallback<InputStream> callback) throws IOException;
 
     /**
      * Returns a list with all domain names and related aliases
@@ -235,7 +234,7 @@ public interface Now {
      * @throws IOException if a problem occurred talking to the server.
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    void getDomains(@NotNull ClientCallback<List<Domain>> callback) throws IOException;
+    void getDomains(@NotNull final ClientCallback<List<Domain>> callback) throws IOException;
 
     /**
      * Adds a new domain and returns its data
@@ -262,7 +261,7 @@ public interface Now {
      */
     void addDomain(@NotNull String name,
                    boolean isExternalDNS,
-                   @NotNull ClientCallback<Domain> callback) throws IOException;
+                   @NotNull final ClientCallback<Domain> callback) throws IOException;
 
     /**
      * Deletes a domain name
@@ -286,7 +285,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void deleteDomain(@NotNull String name,
-                      @NotNull ClientCallback<String> callback) throws IOException;
+                      @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Returns a list with all DNS records configured for a domain name
@@ -311,7 +310,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void getDomainRecords(@NotNull String name,
-                          @NotNull ClientCallback<List<DomainRecord>> callback) throws IOException;
+                          @NotNull final ClientCallback<List<DomainRecord>> callback) throws IOException;
 
     /**
      * Adds a new DNS record for a domain
@@ -339,7 +338,7 @@ public interface Now {
      */
     void addDomainRecord(@NotNull String name,
                          @NotNull DomainRecord record,
-                         @NotNull ClientCallback<DomainRecord> callback) throws IOException;
+                         @NotNull final ClientCallback<DomainRecord> callback) throws IOException;
 
     /**
      * Deletes a DNS record associated with a domain
@@ -366,7 +365,7 @@ public interface Now {
      */
     void deleteDomainRecord(@NotNull String domainName,
                             @NotNull String recordId,
-                            @NotNull ClientCallback<Void> callback) throws IOException;
+                            @NotNull final ClientCallback<Void> callback) throws IOException;
 
     /**
      * Returns a list of all certificates
@@ -390,7 +389,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void getCertificates(@NotNull String commonName,
-                         @NotNull ClientCallback<List<Certificate>> callback) throws IOException;
+                         @NotNull final ClientCallback<List<Certificate>> callback) throws IOException;
 
     /**
      * Creates a new certificate for the given domains registered to the user
@@ -414,7 +413,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void createCertificate(@NotNull List<String> domains,
-                           @NotNull ClientCallback<String> callback) throws IOException;
+                           @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Renews an existing certificate
@@ -437,7 +436,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void renewCertificate(@NotNull List<String> domains,
-                          @NotNull ClientCallback<String> callback) throws IOException;
+                          @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Replace an existing certificate
@@ -450,7 +449,7 @@ public interface Now {
      * @throws IOException if a problem occurred talking to the server.
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    ZonedDateTime replaceCertificate(@NotNull List<String> domains,
+    String replaceCertificate(@NotNull List<String> domains,
                                      @NotNull String ca,
                                      @NotNull String cert,
                                      @NotNull String key) throws IOException;
@@ -473,7 +472,7 @@ public interface Now {
                             @NotNull String ca,
                             @NotNull String cert,
                             @NotNull String key,
-                            @NotNull ClientCallback<ZonedDateTime> callback) throws IOException;
+                            @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Deletes a certificate
@@ -495,7 +494,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void deleteCertificate(@NotNull String commonName,
-                           @NotNull ClientCallback<Void> callback) throws IOException;
+                           @NotNull final ClientCallback<Void> callback) throws IOException;
 
     /**
      * Gets all aliases
@@ -516,7 +515,7 @@ public interface Now {
      * @throws IOException if a problem occurred talking to the server.
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    void getAliases(@NotNull ClientCallback<List<Alias>> callback) throws IOException;
+    void getAliases(@NotNull final ClientCallback<List<Alias>> callback) throws IOException;
 
     /**
      * Delete an alias
@@ -540,7 +539,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void deleteAlias(@NotNull String aliasId,
-                     @NotNull ClientCallback<String> callback) throws IOException;
+                     @NotNull final ClientCallback<String> callback) throws IOException;
 
     /**
      * Gets the list of aliases for the given deployment
@@ -564,7 +563,7 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void getDeploymentAliases(@NotNull String deploymentId,
-                              @NotNull ClientCallback<List<Alias>> callback) throws IOException;
+                              @NotNull final ClientCallback<List<Alias>> callback) throws IOException;
 
     /**
      * Creates an alias for the given deployment
@@ -592,7 +591,7 @@ public interface Now {
      */
     void createDeploymentAlias(@NotNull String deploymentId,
                                @NotNull String alias,
-                               @NotNull ClientCallback<Alias> callback) throws IOException;
+                               @NotNull final ClientCallback<Alias> callback) throws IOException;
 
     /**
      * Returns a list with all secrets
@@ -613,7 +612,7 @@ public interface Now {
      * @throws IOException if a problem occurred talking to the server.
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    void getSecrets(@NotNull ClientCallback<List<Secret>> callback) throws IOException;
+    void getSecrets(@NotNull final ClientCallback<List<Secret>> callback) throws IOException;
 
     /**
      * Creates a secret and returns it
@@ -641,7 +640,7 @@ public interface Now {
      */
     void createSecret(@NotNull String name,
                       @NotNull String value,
-                      @NotNull ClientCallback<Secret> callback) throws IOException;
+                      @NotNull final ClientCallback<Secret> callback) throws IOException;
 
     /**
      * Changes the name of the given secret and returns it
@@ -669,7 +668,7 @@ public interface Now {
      */
     void renameSecret(@NotNull String uidOrName,
                       @NotNull String newName,
-                      @NotNull ClientCallback<Secret> callback) throws IOException;
+                      @NotNull final ClientCallback<Secret> callback) throws IOException;
 
     /**
      * Deletes a secret and returns it
@@ -693,5 +692,5 @@ public interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     void deleteSecret(@NotNull String uidOrName,
-                      @NotNull ClientCallback<Secret> callback) throws IOException;
+                      @NotNull final ClientCallback<Secret> callback) throws IOException;
 }

@@ -21,14 +21,12 @@
  */
 package org.rm3l.now4j.resources.deployments;
 
-import java.time.ZonedDateTime;
-
 public final class Deployment {
 
     private String uid;
     private String host;
     private State state;
-    private ZonedDateTime stateTs;
+    private String stateTs;
 
     public String getUid() {
         return uid;
@@ -54,11 +52,11 @@ public final class Deployment {
         this.state = state;
     }
 
-    public ZonedDateTime getStateTs() {
+    public String getStateTs() {
         return stateTs;
     }
 
-    public void setStateTs(ZonedDateTime stateTs) {
+    public void setStateTs(String stateTs) {
         this.stateTs = stateTs;
     }
 

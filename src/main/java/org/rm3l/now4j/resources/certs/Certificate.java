@@ -21,14 +21,12 @@
  */
 package org.rm3l.now4j.resources.certs;
 
-import java.time.ZonedDateTime;
-
 public final class Certificate {
 
     private String cn;
     private String uid;
-    private ZonedDateTime created;
-    private ZonedDateTime expiration;
+    private String created;
+    private String expiration;
     private Boolean autoRenew;
 
     public String getCn() {
@@ -47,19 +45,19 @@ public final class Certificate {
         this.uid = uid;
     }
 
-    public ZonedDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
-    public ZonedDateTime getExpiration() {
+    public String getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(ZonedDateTime expiration) {
+    public void setExpiration(String expiration) {
         this.expiration = expiration;
     }
 

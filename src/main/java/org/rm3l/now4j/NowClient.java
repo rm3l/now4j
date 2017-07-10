@@ -52,11 +52,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.*;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.rm3l.now4j.interceptors.Now4jInterceptors.TeamInterceptor.NO_TEAM;
 
@@ -78,8 +76,8 @@ public final class NowClient implements Now {
 
     private NowClient() {
         //Read from ~/.now.json or NOW_TOKEN variable
-        String tokenFound;
-        String teamFound;
+        Object tokenFound;
+        Object teamFound;
         final File nowJsonFile = new File(HOME_DIR, NOW_JSON);
         if (nowJsonFile.exists()) {
             final Gson gson = new Gson();
@@ -89,29 +87,30 @@ public final class NowClient implements Now {
             } catch (FileNotFoundException e) {
                 throw new IllegalStateException(e);
             }
-            tokenFound = Optional.ofNullable(fromJson.get(TOKEN))
-                    .map(Object::toString).orElse(null);
-            teamFound = Optional.ofNullable(fromJson.get(TEAM))
-                    .map(Object::toString).orElse(null);
+            tokenFound = fromJson.get(TOKEN);
+            teamFound = fromJson.get(TEAM);
         } else {
             tokenFound = System.getProperty(NOW_TOKEN);
-            if (tokenFound == null || tokenFound.trim().isEmpty()) {
+            if (tokenFound == null || tokenFound.toString().trim().isEmpty()) {
                 tokenFound = System.getenv(NOW_TOKEN);
             }
             teamFound = System.getProperty(NOW_TEAM);
-            if (teamFound == null || teamFound.trim().isEmpty()) {
+            if (teamFound == null || teamFound.toString().trim().isEmpty()) {
                 teamFound = System.getenv(NOW_TEAM);
             }
         }
-        if (tokenFound != null && tokenFound.trim().isEmpty()) {
+        if (tokenFound != null && tokenFound.toString().trim().isEmpty()) {
             tokenFound = null;
         }
-        if (teamFound != null && teamFound.trim().isEmpty()) {
+        if (teamFound != null && teamFound.toString().trim().isEmpty()) {
             teamFound = null;
         }
 
-        this.token = Optional.ofNullable(tokenFound).orElseThrow(IllegalStateException::new);
-        this.team = teamFound;
+        if (tokenFound == null) {
+            throw new IllegalStateException("Token not found");
+        }
+        this.token = tokenFound.toString();
+        this.team = teamFound != null ? tokenFound.toString() : null;
         this.buildNowService();
     }
 
@@ -157,7 +156,7 @@ public final class NowClient implements Now {
                 .addInterceptor(new Now4jInterceptors.AuthenticationInterceptor(
                         this.token))
                 .addInterceptor(new Now4jInterceptors.TeamInterceptor(
-                        Optional.ofNullable(this.team).orElse(NO_TEAM)))
+                        this.team != null ? this.team : NO_TEAM))
                 .build();
         this.buildNowService(httpClient);
     }
@@ -180,7 +179,7 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final GetDeploymentsResponse body = response.body();
-        return body != null ? body.getDeployments() : Collections.emptyList();
+        return body != null ? body.getDeployments() : Collections.<Deployment>emptyList();
     }
 
     @Override
@@ -194,7 +193,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final GetDeploymentsResponse body = response.body();
-                        callback.onSuccess(body != null ? body.getDeployments() : Collections.emptyList());
+                        callback.onSuccess(body != null ? body.getDeployments() : Collections.<Deployment>emptyList());
                     }
 
                     @Override
@@ -215,7 +214,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void getDeployment(@NotNull String deploymentId, @NotNull ClientCallback<Deployment> callback) throws IOException {
+    public void getDeployment(@NotNull String deploymentId, @NotNull final ClientCallback<Deployment> callback) throws IOException {
         this.nowService.getDeployment(deploymentId)
                 .enqueue(new Callback<Deployment>() {
                     @Override
@@ -245,7 +244,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void createDeployment(@NotNull Map<String, Object> body, @NotNull ClientCallback<Deployment> callback) throws IOException {
+    public void createDeployment(@NotNull Map<String, Object> body, @NotNull final ClientCallback<Deployment> callback) throws IOException {
         this.nowService.createDeployment(body)
                 .enqueue(new Callback<Deployment>() {
                     @Override
@@ -274,7 +273,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteDeployment(@NotNull String deploymentId, @NotNull ClientCallback<Void> callback) throws IOException {
+    public void deleteDeployment(@NotNull String deploymentId, @NotNull final ClientCallback<Void> callback) throws IOException {
         this.nowService.deleteDeployment(deploymentId)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -304,7 +303,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void getFiles(@NotNull String deploymentId, @NotNull ClientCallback<List<DeploymentFileStructure>> callback) throws IOException {
+    public void getFiles(@NotNull String deploymentId, @NotNull final ClientCallback<List<DeploymentFileStructure>> callback) throws IOException {
         this.nowService.getFiles(deploymentId)
                 .enqueue(new Callback<List<DeploymentFileStructure>>() {
                     @Override
@@ -337,7 +336,7 @@ public final class NowClient implements Now {
     @Override
     public void getFileAsString(@NotNull String deploymentId,
                                 @NotNull String fileId,
-                                @NotNull ClientCallback<String> callback) throws IOException {
+                                @NotNull final ClientCallback<String> callback) throws IOException {
         this.nowService.getFile(deploymentId, fileId)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -376,7 +375,7 @@ public final class NowClient implements Now {
     @Override
     public void getFileAsInputStream(@NotNull String deploymentId,
                                      @NotNull String fileId,
-                                     @NotNull ClientCallback<InputStream> callback) throws IOException {
+                                     @NotNull final ClientCallback<InputStream> callback) throws IOException {
         this.nowService.getFile(deploymentId, fileId)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -403,11 +402,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final Domains responseBody = response.body();
-        return responseBody != null ? responseBody.getDomains() : Collections.emptyList();
+        return responseBody != null ? responseBody.getDomains() : Collections.<Domain>emptyList();
     }
 
     @Override
-    public void getDomains(@NotNull ClientCallback<List<Domain>> callback) throws IOException {
+    public void getDomains(@NotNull final ClientCallback<List<Domain>> callback) throws IOException {
         this.nowService.getDomains()
                 .enqueue(new Callback<Domains>() {
                     @Override
@@ -417,7 +416,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final Domains body = response.body();
-                        callback.onSuccess(body != null ? body.getDomains() : Collections.emptyList());
+                        callback.onSuccess(body != null ? body.getDomains() : Collections.<Domain>emptyList());
                     }
 
                     @Override
@@ -441,7 +440,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void addDomain(@NotNull String name, boolean isExternalDNS, @NotNull ClientCallback<Domain> callback) throws IOException {
+    public void addDomain(@NotNull String name, boolean isExternalDNS, @NotNull final ClientCallback<Domain> callback) throws IOException {
         final Domain newDomain = new Domain();
         newDomain.setName(name);
         newDomain.setExternal(isExternalDNS);
@@ -475,7 +474,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteDomain(@NotNull String name, @NotNull ClientCallback<String> callback) throws IOException {
+    public void deleteDomain(@NotNull String name, @NotNull final ClientCallback<String> callback) throws IOException {
         this.nowService.deleteDomain(name)
                 .enqueue(new Callback<Domain>() {
                     @Override
@@ -502,11 +501,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final DomainRecords body = response.body();
-        return body != null ? body.getRecords() : Collections.emptyList();
+        return body != null ? body.getRecords() : Collections.<DomainRecord>emptyList();
     }
 
     @Override
-    public void getDomainRecords(@NotNull String name, @NotNull ClientCallback<List<DomainRecord>> callback) throws IOException {
+    public void getDomainRecords(@NotNull String name, @NotNull final ClientCallback<List<DomainRecord>> callback) throws IOException {
         this.nowService.getDomainRecords(name)
                 .enqueue(new Callback<DomainRecords>() {
                     @Override
@@ -516,7 +515,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final DomainRecords body = response.body();
-                        callback.onSuccess(body != null ? body.getRecords() : Collections.emptyList());
+                        callback.onSuccess(body != null ? body.getRecords() : Collections.<DomainRecord>emptyList());
                     }
 
                     @Override
@@ -540,7 +539,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void addDomainRecord(@NotNull String name, @NotNull DomainRecord record, @NotNull ClientCallback<DomainRecord> callback) throws IOException {
+    public void addDomainRecord(@NotNull String name, @NotNull DomainRecord record, @NotNull final ClientCallback<DomainRecord> callback) throws IOException {
         final DomainRecordCreationRequest domainRecordCreationRequest = new DomainRecordCreationRequest();
         domainRecordCreationRequest.setData(record);
         this.nowService.createDomainRecord(name, domainRecordCreationRequest)
@@ -571,7 +570,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteDomainRecord(@NotNull String domainName, @NotNull String recordId, @NotNull ClientCallback<Void> callback) throws IOException {
+    public void deleteDomainRecord(@NotNull String domainName, @NotNull String recordId, @NotNull final ClientCallback<Void> callback) throws IOException {
         this.nowService.deleteDomainRecord(domainName, recordId)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -597,11 +596,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final Certificates certificates = response.body();
-        return certificates != null ? certificates.getCerts() : Collections.emptyList();
+        return certificates != null ? certificates.getCerts() : Collections.<Certificate>emptyList();
     }
 
     @Override
-    public void getCertificates(@NotNull String commonName, @NotNull ClientCallback<List<Certificate>> callback) throws IOException {
+    public void getCertificates(@NotNull String commonName, @NotNull final ClientCallback<List<Certificate>> callback) throws IOException {
         this.nowService.getCertificates(commonName)
                 .enqueue(new Callback<Certificates>() {
                     @Override
@@ -611,7 +610,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final Certificates certificates = response.body();
-                        callback.onSuccess(certificates != null ? certificates.getCerts() : Collections.emptyList());
+                        callback.onSuccess(certificates != null ? certificates.getCerts() : Collections.<Certificate>emptyList());
                     }
 
                     @Override
@@ -634,7 +633,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void createCertificate(@NotNull List<String> domains, @NotNull ClientCallback<String> callback) throws IOException {
+    public void createCertificate(@NotNull List<String> domains, @NotNull final ClientCallback<String> callback) throws IOException {
         final CertificateCreationOrUpdateRequest request = new CertificateCreationOrUpdateRequest();
         request.setDomains(domains);
         this.nowService.issueCertificate(request)
@@ -670,7 +669,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void renewCertificate(@NotNull List<String> domains, @NotNull ClientCallback<String> callback) throws IOException {
+    public void renewCertificate(@NotNull List<String> domains, @NotNull final ClientCallback<String> callback) throws IOException {
         final CertificateCreationOrUpdateRequest request = new CertificateCreationOrUpdateRequest();
         request.setDomains(domains);
         request.setRenew(true);
@@ -694,7 +693,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public ZonedDateTime replaceCertificate(@NotNull List<String> domains, @NotNull String ca, @NotNull String cert, @NotNull String key) throws IOException {
+    public String replaceCertificate(@NotNull List<String> domains, @NotNull String ca, @NotNull String cert, @NotNull String key) throws IOException {
         final CertificateCreationOrUpdateRequest request = new CertificateCreationOrUpdateRequest();
         request.setDomains(domains);
         request.setCa(ca);
@@ -709,7 +708,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void replaceCertificate(@NotNull List<String> domains, @NotNull String ca, @NotNull String cert, @NotNull String key, @NotNull ClientCallback<ZonedDateTime> callback) throws IOException {
+    public void replaceCertificate(@NotNull List<String> domains, @NotNull String ca, @NotNull String cert, @NotNull String key, @NotNull final ClientCallback<String> callback) throws IOException {
         final CertificateCreationOrUpdateRequest request = new CertificateCreationOrUpdateRequest();
         request.setDomains(domains);
         request.setCa(ca);
@@ -743,7 +742,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteCertificate(@NotNull String commonName, @NotNull ClientCallback<Void> callback) throws IOException {
+    public void deleteCertificate(@NotNull String commonName, @NotNull final ClientCallback<Void> callback) throws IOException {
         this.nowService.deleteCertificate(commonName)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -769,11 +768,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final Aliases body = response.body();
-        return body != null ? body.getAliases() : Collections.emptyList();
+        return body != null ? body.getAliases() : Collections.<Alias>emptyList();
     }
 
     @Override
-    public void getAliases(@NotNull ClientCallback<List<Alias>> callback) throws IOException {
+    public void getAliases(@NotNull final ClientCallback<List<Alias>> callback) throws IOException {
         this.nowService.getAliases()
                 .enqueue(new Callback<Aliases>() {
                     @Override
@@ -782,7 +781,7 @@ public final class NowClient implements Now {
                             this.onFailure(call, new UnsuccessfulResponseException(response.code(), response.message()));
                         } else {
                             final Aliases body = response.body();
-                            callback.onSuccess(body != null ? body.getAliases() : Collections.emptyList());
+                            callback.onSuccess(body != null ? body.getAliases() : Collections.<Alias>emptyList());
                         }
                     }
 
@@ -804,7 +803,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteAlias(@NotNull String aliasId, @NotNull ClientCallback<String> callback) throws IOException {
+    public void deleteAlias(@NotNull String aliasId, @NotNull final ClientCallback<String> callback) throws IOException {
         this.nowService.deleteAlias(aliasId)
                 .enqueue(new Callback<DeleteAliasResponse>() {
                     @Override
@@ -831,11 +830,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final Aliases body = response.body();
-        return body != null ? body.getAliases() : Collections.emptyList();
+        return body != null ? body.getAliases() : Collections.<Alias> emptyList();
     }
 
     @Override
-    public void getDeploymentAliases(@NotNull String deploymentId, @NotNull ClientCallback<List<Alias>> callback) throws IOException {
+    public void getDeploymentAliases(@NotNull String deploymentId, @NotNull final ClientCallback<List<Alias>> callback) throws IOException {
         this.nowService.getDeploymentAliases(deploymentId)
                 .enqueue(new Callback<Aliases>() {
                     @Override
@@ -845,7 +844,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final Aliases body = response.body();
-                        callback.onSuccess(body != null ? body.getAliases() : Collections.emptyList());
+                        callback.onSuccess(body != null ? body.getAliases() : Collections.<Alias>emptyList());
                     }
 
                     @Override
@@ -867,7 +866,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void createDeploymentAlias(@NotNull String deploymentId, @NotNull String alias, @NotNull ClientCallback<Alias> callback) throws IOException {
+    public void createDeploymentAlias(@NotNull String deploymentId, @NotNull String alias, @NotNull final ClientCallback<Alias> callback) throws IOException {
         final Alias aliasToCreate = new Alias();
         aliasToCreate.setAlias(alias);
         this.nowService.createDeploymentAliases(deploymentId, aliasToCreate)
@@ -896,11 +895,11 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final GetSecretsResponse body = response.body();
-        return body != null ? body.getSecrets() : Collections.emptyList();
+        return body != null ? body.getSecrets() : Collections.<Secret>emptyList();
     }
 
     @Override
-    public void getSecrets(@NotNull ClientCallback<List<Secret>> callback) throws IOException {
+    public void getSecrets(@NotNull final ClientCallback<List<Secret>> callback) throws IOException {
         this.nowService.getSecrets()
                 .enqueue(new Callback<GetSecretsResponse>() {
                     @Override
@@ -910,7 +909,7 @@ public final class NowClient implements Now {
                             return;
                         }
                         final GetSecretsResponse body = response.body();
-                        callback.onSuccess(body != null ? body.getSecrets() : Collections.emptyList());
+                        callback.onSuccess(body != null ? body.getSecrets() : Collections.<Secret>emptyList());
                     }
 
                     @Override
@@ -933,7 +932,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void createSecret(@NotNull String name, @NotNull String value, @NotNull ClientCallback<Secret> callback) throws IOException {
+    public void createSecret(@NotNull String name, @NotNull String value, @NotNull final ClientCallback<Secret> callback) throws IOException {
         final CreateOrUpdateSecretRequest request = new CreateOrUpdateSecretRequest();
         request.setName(name);
         request.setValue(value);
@@ -967,7 +966,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void renameSecret(@NotNull String uidOrName, @NotNull String newName, @NotNull ClientCallback<Secret> callback) throws IOException {
+    public void renameSecret(@NotNull String uidOrName, @NotNull String newName, @NotNull final ClientCallback<Secret> callback) throws IOException {
         final CreateOrUpdateSecretRequest request = new CreateOrUpdateSecretRequest();
         request.setName(newName);
         this.nowService.editSecret(uidOrName, request)
@@ -998,7 +997,7 @@ public final class NowClient implements Now {
     }
 
     @Override
-    public void deleteSecret(@NotNull String uidOrName, @NotNull ClientCallback<Secret> callback) throws IOException {
+    public void deleteSecret(@NotNull String uidOrName, @NotNull final ClientCallback<Secret> callback) throws IOException {
         this.nowService.deleteSecret(uidOrName)
                 .enqueue(new Callback<Secret>() {
                     @Override

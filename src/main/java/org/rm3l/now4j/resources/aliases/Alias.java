@@ -21,14 +21,12 @@
  */
 package org.rm3l.now4j.resources.aliases;
 
-import java.time.ZonedDateTime;
-
 public final class Alias {
 
     private String oldId;
     private String uid;
     private String alias;
-    private ZonedDateTime created;
+    private String created;
     private String deploymentId;
 
     public String getOldId() {
@@ -55,11 +53,11 @@ public final class Alias {
         this.alias = alias;
     }
 
-    public ZonedDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 

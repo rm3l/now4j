@@ -30,8 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import org.rm3l.now4j.NowClient;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 public final class Now4jInterceptors {
 
@@ -76,8 +74,6 @@ public final class Now4jInterceptors {
 
         public static final String NO_TEAM = "";
 
-        private static final Predicate<String> NO_TEAM_PREDICATE = NO_TEAM::equals;
-
         @Nullable
         private final String team;
 
@@ -87,17 +83,16 @@ public final class Now4jInterceptors {
 
         @Override
         public Response intercept(final Chain chain) throws IOException {
-            final Request newRequest = Optional.ofNullable(this.team)
-                    .map(String::trim)
-                    .filter(NO_TEAM_PREDICATE.negate())
-                    .map(team -> {
-                        final Request request = chain.request();
-                        final HttpUrl newUrl = request.url().newBuilder()
-                                .addQueryParameter("team", team)
-                                .build();
-                        return request.newBuilder().url(newUrl).build();
-                    })
-                    .orElse(chain.request());
+            final Request newRequest;
+            if (this.team == null || NO_TEAM.equals(this.team.trim())) {
+                newRequest = chain.request();
+            } else {
+                final Request request = chain.request();
+                final HttpUrl newUrl = request.url().newBuilder()
+                        .addQueryParameter("team", team)
+                        .build();
+                newRequest = request.newBuilder().url(newUrl).build();
+            }
             return chain.proceed(newRequest);
         }
     }

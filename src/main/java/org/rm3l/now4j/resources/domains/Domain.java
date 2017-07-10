@@ -21,7 +21,6 @@
  */
 package org.rm3l.now4j.resources.domains;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public final class Domain {
@@ -29,7 +28,7 @@ public final class Domain {
     private String uid;
     private Boolean verified;
     private String verifyToken;
-    private ZonedDateTime created;
+    private String created;
     private Boolean isExternal;
     private String name;
     private List<String> aliases;
@@ -58,11 +57,11 @@ public final class Domain {
         this.verifyToken = verifyToken;
     }
 
-    public ZonedDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
