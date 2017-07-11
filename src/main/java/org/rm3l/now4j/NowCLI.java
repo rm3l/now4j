@@ -22,28 +22,81 @@
 package org.rm3l.now4j;
 
 import com.beust.jcommander.JCommander;
-import com.google.gson.Gson;
-import org.rm3l.now4j.cli.Args;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import org.rm3l.now4j.cli.subcommand.AbstractCommand;
+import org.rm3l.now4j.cli.subcommand.certs.CommandCertificates;
+import org.rm3l.now4j.cli.subcommand.deployments.CommandDeployments;
+import org.rm3l.now4j.cli.subcommand.domains.CommandDomains;
+import org.rm3l.now4j.cli.subcommand.secrets.CommandSecrets;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NowCLI {
 
-    public static void main(String... argv) throws ReflectiveOperationException {
+    @Parameters
+    private static class CommandMain {
 
-        final Args args = new Args();
-        JCommander.newBuilder().addObject(args).build().parse(argv);
+        @Parameter(names = {"--help", "-h"}, description = "Show this help", help = true)
+        boolean help;
+
+        @Parameter(names = {"--debug", "-d"}, description = "Debug mode")
+        boolean debug = false;
+
+        @Parameter(names = {"--token", "--T"}, description = "Now API Token")
+        String token;
+
+        @Parameter(names = {"--team", "--t"}, description = "Now API Team")
+        String team;
+    }
+
+    private static final Map<String, AbstractCommand> commandMap =
+            new HashMap<>();
+    static {
+        //Register available commands
+        commandMap.put("certs", new CommandCertificates());
+        commandMap.put("deployments", new CommandDeployments());
+        commandMap.put("domains", new CommandDomains());
+        commandMap .put("secrets", new CommandSecrets());
+    }
+
+    public static void main(String... argv) throws Exception {
+
+        final CommandMain commandMain = new CommandMain();
+
+        final JCommander.Builder commanderBuilder = JCommander.newBuilder()
+                .addObject(commandMain);
+        for (final Map.Entry<String, AbstractCommand> commandEntry : commandMap.entrySet()) {
+            commanderBuilder.addCommand(commandEntry.getKey(), commandEntry.getValue());
+        }
+        final JCommander commander = commanderBuilder.build();
+        commander.parse(argv);
 
         final NowClient nowClient;
-        final String tokenFromCLI = args.getTokenFromCLI();
-        if (tokenFromCLI == null || tokenFromCLI.isEmpty()) {
+        final String token = commandMain.token;
+        if (token == null || token.isEmpty()) {
             //Default Now Client, with no option => read from  /.now.json file
             nowClient = NowClient.create();
         } else {
             //There is a token option
-            nowClient = NowClient.create(tokenFromCLI, args.getTeam());
+            final String team = commandMain.team;
+            if (team == null || team.isEmpty()) {
+                //Read team from  /.now.json, if any
+                nowClient = NowClient.create(token);
+            } else {
+                nowClient = NowClient.create(token, team);
+            }
         }
 
-        final String command = args.getCommand();
-        //TODO Implement Case by case, not by reflection
-        System.out.println(new Gson().toJson(NowClient.class.getMethod(command).invoke(nowClient)));
+        final String parsedCommand = commander.getParsedCommand();
+        if (!commandMap.containsKey(parsedCommand)) {
+            throw new IllegalArgumentException("Unsupported command: " +
+                    parsedCommand + ". Possible commands: " + commandMap.keySet());
+        }
+        final AbstractCommand abstractCommand = commandMap.get(parsedCommand);
+        abstractCommand.setNowClient(nowClient);
+
+        abstractCommand.work();
     }
 }

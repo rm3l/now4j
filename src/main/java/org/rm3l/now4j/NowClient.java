@@ -114,10 +114,6 @@ public final class NowClient implements Now {
         this.buildNowService();
     }
 
-    private NowClient(@NotNull final String token) {
-        this(token, null);
-    }
-
     private NowClient(@NotNull final String token, @Nullable final String team) {
         if (token.trim().isEmpty()) {
             throw new IllegalArgumentException("Token cannot be NULL or blank");
@@ -138,7 +134,21 @@ public final class NowClient implements Now {
     }
 
     public static NowClient create(@NotNull final String token) {
-        return new NowClient(token);
+        //Read team from  /.now.json, if any
+        Object teamFound = null;
+        final File nowJsonFile = new File(HOME_DIR, NOW_JSON);
+        if (nowJsonFile.exists()) {
+            final Gson gson = new Gson();
+            final Map fromJson;
+            try {
+                fromJson = gson.fromJson(new FileReader(nowJsonFile), Map.class);
+                teamFound = fromJson.get(TEAM);
+            } catch (FileNotFoundException e) {
+                //No worries
+            }
+        }
+        return new NowClient(token,
+                teamFound != null ? teamFound.toString() : null);
     }
 
     public static NowClient create(@NotNull final String token,
