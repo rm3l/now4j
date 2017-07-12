@@ -20,7 +20,7 @@
 final homePath = System.properties['user.home']
 
 group 'org.rm3l'
-version '1.0-SNAPSHOT'
+version '1.0.0-rc1'
 description 'Unofficial Java client for the Now API'
 
 buildscript {
@@ -159,10 +159,10 @@ bintray {
 
         //noinspection GroovyAssignabilityCheck
         version {
-            name = '1.0-SNAPSHOT'
+            name = '1.0.0-rc1'
             desc = 'Unofficial Java client for the Now API'
             released = new Date()
-            vcsTag = '1.0-SNAPSHOT'
+            vcsTag = '1.0.0-rc1'
         }
 
         publicDownloadNumbers = true
