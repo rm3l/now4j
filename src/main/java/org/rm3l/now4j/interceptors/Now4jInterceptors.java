@@ -45,7 +45,7 @@ public final class Now4jInterceptors {
         public Response intercept(Chain chain) throws IOException {
             final Request requestWithNewHeaders = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("X-Requested-By", NowClient.class.getCanonicalName())
+                    .addHeader("X-Requested-By", "now4j")
                     .build();
             return chain.proceed(requestWithNewHeaders);
         }

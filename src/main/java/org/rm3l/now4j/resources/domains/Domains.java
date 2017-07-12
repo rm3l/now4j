@@ -35,25 +35,4 @@ public final class Domains {
         this.domains = domains;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Domains domains1 = (Domains) o;
-
-        return domains != null ? domains.equals(domains1.domains) : domains1.domains == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return domains != null ? domains.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Domains{" +
-                "domains=" + domains +
-                '}';
-    }
 }

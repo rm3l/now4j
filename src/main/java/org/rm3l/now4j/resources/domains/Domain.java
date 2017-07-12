@@ -88,45 +88,4 @@ public final class Domain {
     public void setAliases(List<String> aliases) {
         this.aliases = aliases;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Domain domain = (Domain) o;
-
-        if (uid != null ? !uid.equals(domain.uid) : domain.uid != null) return false;
-        if (verified != null ? !verified.equals(domain.verified) : domain.verified != null) return false;
-        if (verifyToken != null ? !verifyToken.equals(domain.verifyToken) : domain.verifyToken != null) return false;
-        if (created != null ? !created.equals(domain.created) : domain.created != null) return false;
-        if (isExternal != null ? !isExternal.equals(domain.isExternal) : domain.isExternal != null) return false;
-        if (name != null ? !name.equals(domain.name) : domain.name != null) return false;
-        return aliases != null ? aliases.equals(domain.aliases) : domain.aliases == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = uid != null ? uid.hashCode() : 0;
-        result = 31 * result + (verified != null ? verified.hashCode() : 0);
-        result = 31 * result + (verifyToken != null ? verifyToken.hashCode() : 0);
-        result = 31 * result + (created != null ? created.hashCode() : 0);
-        result = 31 * result + (isExternal != null ? isExternal.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (aliases != null ? aliases.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Domain{" +
-                "uid='" + uid + '\'' +
-                ", verified=" + verified +
-                ", verifyToken='" + verifyToken + '\'' +
-                ", created=" + created +
-                ", isExternal=" + isExternal +
-                ", name='" + name + '\'' +
-                ", aliases=" + aliases +
-                '}';
-    }
 }

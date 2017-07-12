@@ -34,26 +34,4 @@ public final class GetDeploymentsResponse {
     public void setDeployments(List<Deployment> deployments) {
         this.deployments = deployments;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GetDeploymentsResponse that = (GetDeploymentsResponse) o;
-
-        return deployments != null ? deployments.equals(that.deployments) : that.deployments == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return deployments != null ? deployments.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "GetDeploymentsResponse{" +
-                "deployments=" + deployments +
-                '}';
-    }
 }

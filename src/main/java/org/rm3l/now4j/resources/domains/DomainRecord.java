@@ -96,47 +96,4 @@ public final class DomainRecord {
         this.mxPriority = mxPriority;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DomainRecord that = (DomainRecord) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
-        if (created != null ? !created.equals(that.created) : that.created != null) return false;
-        if (updated != null ? !updated.equals(that.updated) : that.updated != null) return false;
-        return mxPriority != null ? mxPriority.equals(that.mxPriority) : that.mxPriority == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (slug != null ? slug.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (created != null ? created.hashCode() : 0);
-        result = 31 * result + (updated != null ? updated.hashCode() : 0);
-        result = 31 * result + (mxPriority != null ? mxPriority.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DomainRecord{" +
-                "id='" + id + '\'' +
-                ", slug='" + slug + '\'' +
-                ", type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", mxPriority=" + mxPriority +
-                '}';
-    }
 }

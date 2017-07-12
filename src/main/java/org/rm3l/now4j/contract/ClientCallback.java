@@ -26,18 +26,21 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Callback contract to implement for asynchronous operations.
+ *
  * @param <T> the reult type
  */
 public interface ClientCallback<T> {
 
     /**
      * Called upon success
+     *
      * @param result the result
      */
     void onSuccess(@Nullable T result);
 
     /**
      * Called upon error
+     *
      * @param error the error, if any
      */
     void onFailure(@NotNull Throwable error);

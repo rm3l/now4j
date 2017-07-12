@@ -62,38 +62,6 @@ public final class DeploymentFileStructure {
         this.children = children;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DeploymentFileStructure that = (DeploymentFileStructure) o;
-
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
-        return children != null ? children.equals(that.children) : that.children == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (children != null ? children.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DeploymentFileStructure{" +
-                "type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", uid='" + uid + '\'' +
-                ", children=" + children +
-                '}';
-    }
-
     public static final class Child {
         private String type;
         private String name;

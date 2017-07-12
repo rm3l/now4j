@@ -60,31 +60,6 @@ public final class Deployment {
         this.stateTs = stateTs;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Deployment that = (Deployment) o;
-
-        return uid != null ? uid.equals(that.uid) : that.uid == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return uid != null ? uid.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Deployment{" +
-                "uid='" + uid + '\'' +
-                ", host='" + host + '\'' +
-                ", state=" + state +
-                ", stateTs=" + stateTs +
-                '}';
-    }
-
     enum State {
         DEPLOYING,
         BOOTED,

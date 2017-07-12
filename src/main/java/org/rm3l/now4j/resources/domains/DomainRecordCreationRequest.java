@@ -33,25 +33,4 @@ public final class DomainRecordCreationRequest {
         this.data = data;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DomainRecordCreationRequest that = (DomainRecordCreationRequest) o;
-
-        return data != null ? data.equals(that.data) : that.data == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return data != null ? data.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "DomainRecordCreationRequest{" +
-                "data=" + data +
-                '}';
-    }
 }

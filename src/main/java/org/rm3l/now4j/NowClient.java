@@ -636,7 +636,7 @@ public final class NowClient implements Now {
         request.setDomains(domains);
         final Response<CertificateCreationOrUpdateResponse> response = this.nowService.issueCertificate(request).execute();
         final CertificateCreationOrUpdateResponse body;
-        if (!response.isSuccessful() || (body  = response.body()) == null) {
+        if (!response.isSuccessful() || (body = response.body()) == null) {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         return body.getUid();
@@ -651,7 +651,7 @@ public final class NowClient implements Now {
                     @Override
                     public void onResponse(Call<CertificateCreationOrUpdateResponse> call, Response<CertificateCreationOrUpdateResponse> response) {
                         final CertificateCreationOrUpdateResponse body;
-                        if (!response.isSuccessful() || (body  = response.body()) == null) {
+                        if (!response.isSuccessful() || (body = response.body()) == null) {
                             this.onFailure(call, new UnsuccessfulResponseException(response.code(), response.message()));
                             return;
                         }
@@ -672,7 +672,7 @@ public final class NowClient implements Now {
         request.setRenew(true);
         final Response<CertificateCreationOrUpdateResponse> response = this.nowService.createOrReplaceCertificate(request).execute();
         final CertificateCreationOrUpdateResponse body;
-        if (!response.isSuccessful() || (body  = response.body()) == null) {
+        if (!response.isSuccessful() || (body = response.body()) == null) {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         return body.getUid();
@@ -688,7 +688,7 @@ public final class NowClient implements Now {
                     @Override
                     public void onResponse(Call<CertificateCreationOrUpdateResponse> call, Response<CertificateCreationOrUpdateResponse> response) {
                         final CertificateCreationOrUpdateResponse body;
-                        if (!response.isSuccessful() || (body  = response.body()) == null) {
+                        if (!response.isSuccessful() || (body = response.body()) == null) {
                             this.onFailure(call, new UnsuccessfulResponseException(response.code(), response.message()));
                             return;
                         }
@@ -711,7 +711,7 @@ public final class NowClient implements Now {
         request.setKey(key);
         final Response<CertificateCreationOrUpdateResponse> response = this.nowService.createOrReplaceCertificate(request).execute();
         final CertificateCreationOrUpdateResponse body;
-        if (!response.isSuccessful() || (body  = response.body()) == null) {
+        if (!response.isSuccessful() || (body = response.body()) == null) {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         return body.getCreated_at();
@@ -729,7 +729,7 @@ public final class NowClient implements Now {
                     @Override
                     public void onResponse(Call<CertificateCreationOrUpdateResponse> call, Response<CertificateCreationOrUpdateResponse> response) {
                         final CertificateCreationOrUpdateResponse body;
-                        if (!response.isSuccessful() || (body  = response.body()) == null) {
+                        if (!response.isSuccessful() || (body = response.body()) == null) {
                             this.onFailure(call, new UnsuccessfulResponseException(response.code(), response.message()));
                             return;
                         }
@@ -809,7 +809,7 @@ public final class NowClient implements Now {
         if (!response.isSuccessful() || (body = response.body()) == null) {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
-        return  body.getStatus();
+        return body.getStatus();
     }
 
     @Override
@@ -840,7 +840,7 @@ public final class NowClient implements Now {
             throw new UnsuccessfulResponseException(response.code(), response.message());
         }
         final Aliases body = response.body();
-        return body != null ? body.getAliases() : Collections.<Alias> emptyList();
+        return body != null ? body.getAliases() : Collections.<Alias>emptyList();
     }
 
     @Override

@@ -23,8 +23,8 @@ package org.rm3l.now4j;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import org.rm3l.now4j.cli.subcommand.AbstractCommand;
+import org.rm3l.now4j.cli.subcommand.aliases.CommandAliases;
 import org.rm3l.now4j.cli.subcommand.certs.CommandCertificates;
 import org.rm3l.now4j.cli.subcommand.deployments.CommandDeployments;
 import org.rm3l.now4j.cli.subcommand.domains.CommandDomains;
@@ -35,43 +35,44 @@ import java.util.Map;
 
 public class NowCLI {
 
-    @Parameters
-    private static class CommandMain {
+    private static final Map<String, AbstractCommand> commandMap = new HashMap<>();
 
-        @Parameter(names = {"--help", "-h"}, description = "Show this help", help = true)
-        boolean help;
-
-        @Parameter(names = {"--debug", "-d"}, description = "Debug mode")
-        boolean debug = false;
-
-        @Parameter(names = {"--token", "--T"}, description = "Now API Token")
-        String token;
-
-        @Parameter(names = {"--team", "--t"}, description = "Now API Team")
-        String team;
-    }
-
-    private static final Map<String, AbstractCommand> commandMap =
-            new HashMap<>();
     static {
         //Register available commands
+        commandMap.put("aliases", new CommandAliases());
         commandMap.put("certs", new CommandCertificates());
         commandMap.put("deployments", new CommandDeployments());
         commandMap.put("domains", new CommandDomains());
-        commandMap .put("secrets", new CommandSecrets());
+        commandMap.put("secrets", new CommandSecrets());
     }
 
+    @Parameter(names = {"--verbose", "--log", "-v", "-l"})
+    private int verboseLevel = 0;
+
     public static void main(String... argv) throws Exception {
+
+        //Attempt to determine verbose level first
+        final NowCLI nowCLI = new NowCLI();
+        JCommander.newBuilder().addObject(nowCLI)
+                .acceptUnknownOptions(true)
+                .build().parse(argv);
 
         final CommandMain commandMain = new CommandMain();
 
         final JCommander.Builder commanderBuilder = JCommander.newBuilder()
+                .programName("java -jar now4j-uberjar.jar")
+                .verbose(nowCLI.verboseLevel)
                 .addObject(commandMain);
         for (final Map.Entry<String, AbstractCommand> commandEntry : commandMap.entrySet()) {
             commanderBuilder.addCommand(commandEntry.getKey(), commandEntry.getValue());
         }
         final JCommander commander = commanderBuilder.build();
         commander.parse(argv);
+
+        if (commandMain.help) {
+            commander.usage();
+            return;
+        }
 
         final NowClient nowClient;
         final String token = commandMain.token;
@@ -96,7 +97,31 @@ public class NowCLI {
         }
         final AbstractCommand abstractCommand = commandMap.get(parsedCommand);
         abstractCommand.setNowClient(nowClient);
-
         abstractCommand.work();
+    }
+
+    private static class CommandMain {
+
+        @Parameter(
+                names = {"--help", "-h"},
+                description = "Show this help",
+                help = true,
+                order = 3)
+        boolean help;
+
+        @Parameter(names = {"--debug", "-d"},
+                description = "Debug mode",
+                order = 2)
+        boolean debug = false;
+
+        @Parameter(names = {"--token", "--T"},
+                description = "Now API Token. Read from ~/.now.json if not specified here.",
+                order = 0)
+        String token;
+
+        @Parameter(names = {"--team", "--t"},
+                description = "Now API Team. Read from ~/.now.json if not specified here.",
+                order = 1)
+        String team;
     }
 }
