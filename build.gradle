@@ -16,12 +16,10 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-final homePath = System.properties['user.home']
-
-group 'org.rm3l'
-version '1.0.0-rc1'
-description 'Unofficial Java client for the Now API'
+Logger logger = LoggerFactory.getLogger('now4j-parent')
 
 buildscript {
     repositories {
@@ -36,142 +34,90 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'com.github.dcendents.android-maven'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        compile 'org.jetbrains:annotations:15.0'
+    }
+
+    task generateSourcesJar(type: Jar) {
+        classifier 'sources'
+    }
+
+    task generateJavadocs(type: Javadoc) {
+        failOnError false
+    }
+
+    task generateJavadocsJar(type: Jar) {
+        from generateJavadocs.destinationDir
+        classifier 'javadoc'
+    }
+
+    generateJavadocsJar.dependsOn generateJavadocs
+
+    artifacts {
+        archives generateJavadocsJar
+        archives generateSourcesJar
+    }
 }
 
-sourceSets {
-    integrationTest {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integration-test/java')
+//For Bintray publishing signing
+def homePath = System.properties['user.home'].toString()
+
+//Attempt to read properties file for deployment on Bintray, if any
+final propsFile = new File(homePath, ".bintray.properties")
+
+def bintrayUser = ""
+def bintrayKey = ""
+if (propsFile.exists()) {
+    logger.debug("[Bintray] Using properties file located at ${propsFile.absolutePath}")
+    final props = new Properties()
+    props.load(new FileInputStream(propsFile))
+    bintrayUser = props['user']
+    bintrayKey = props['key']
+}
+
+ext.getBintrayConfig = {
+    artifactId, artifactLabels, description ->
+        logger.debug("[Bintray] getBintrayConfig($artifactId, $artifactLabels, $description)")
+        return {
+            user = bintrayUser
+            key = bintrayKey
+
+            publish = true //If version should be auto published after an upload
+
+            pkg {
+                repo = 'maven'
+                name = "org.rm3l:${artifactId}"
+                labels = artifactLabels
+
+                //noinspection GroovyAssignabilityCheck
+                version {
+                    name = '1.0.0-rc2'
+                    desc = description
+                    released = new Date()
+                    vcsTag = '1.0.0-rc2'
+                }
+
+                publicDownloadNumbers = true
+
+                licenses = ['MIT']
+                vcsUrl = 'https://github.com/rm3l/now4j.git'
+                websiteUrl = 'https://github.com/rm3l/now4j'
+                issueTrackerUrl = 'https://github.com/rm3l/now4j/issues'
+
+            }
+            configurations = ['archives']
         }
-        resources.srcDir file('src/integration-test/resources')
-    }
-}
-
-configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    compile 'org.jetbrains:annotations:15.0'
-
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.beust:jcommander:1.72'
-}
-
-//create a single Jar with all dependencies
-task fatJar(type: Jar) {
-    manifest {
-        attributes (
-                'Implementation-Title': project.name,
-                'Implementation-Version': version,
-                'Main-Class': 'org.rm3l.now4j.NowCLI'
-        )
-    }
-    baseName = project.name + '-uberjar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-}
-
-/*
- * Ensure that the HTML reports of unit and integration tests are
- * created to different report directories
- */
-tasks.withType(Test) {
-    reports.html.destination = file("${reporting.baseDir}/${name}")
-}
-
-/*
- * Ensure that integration tests are run before the check task
- * and that the check task fails the build if there are failing integration tests.
- */
-check.dependsOn integrationTest
-
-/*
- * Ensure that unit tests are run before integration tests.
- * This guarantees that unit tests are run even if integration tests fails.
- */
-integrationTest.mustRunAfter test
-
-task generateSourcesJar(type: Jar) {
-    classifier 'sources'
-}
-
-task generateJavadocs(type: Javadoc) {
-    failOnError false
-}
-
-task generateJavadocsJar(type: Jar) {
-    from generateJavadocs.destinationDir
-    classifier 'javadoc'
-}
-
-generateJavadocsJar.dependsOn generateJavadocs
-
-artifacts {
-    archives generateJavadocsJar
-    archives generateSourcesJar
-}
-
-bintray {
-
-    //Attempt to read properties file for deployment on Bintray, if any
-    final propsFile = new File(homePath.toString(), ".bintray.properties")
-
-    if (propsFile.exists()) {
-        printf("[Bintray] Using properties file located at " + propsFile.absolutePath)
-        final props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        user = props['user']
-        key = props['key']
-    } else {
-        user = ""
-        key = ""
-    }
-
-    publish = true //If version should be auto published after an upload
-
-    pkg {
-        repo = 'maven'
-        name = 'org.rm3l:now4j'
-        labels = ['now', 'java', 'library']
-
-        //noinspection GroovyAssignabilityCheck
-        version {
-            name = '1.0.0-rc1'
-            desc = 'Unofficial Java client for the Now API'
-            released = new Date()
-            vcsTag = '1.0.0-rc1'
-        }
-
-        publicDownloadNumbers = true
-
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/rm3l/now4j.git'
-        websiteUrl = 'https://github.com/rm3l/now4j'
-        issueTrackerUrl = 'https://github.com/rm3l/now4j/issues'
-
-    }
-    configurations = ['archives']
 }

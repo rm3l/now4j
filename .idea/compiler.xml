@@ -2,6 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="now4j-cli_integrationTest" target="1.7" />
+      <module name="now4j-cli_main" target="1.7" />
+      <module name="now4j-cli_test" target="1.7" />
+      <module name="now4j-parent_integrationTest" target="1.7" />
+      <module name="now4j-parent_main" target="1.8" />
+      <module name="now4j-parent_test" target="1.8" />
       <module name="now4j_integrationTest" target="1.7" />
       <module name="now4j_main" target="1.7" />
       <module name="now4j_test" target="1.7" />

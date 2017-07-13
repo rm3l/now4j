@@ -19,10 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.rm3l.now4j;
+package org.rm3l.now4j.cli;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import org.rm3l.now4j.NowClient;
 import org.rm3l.now4j.cli.subcommand.AbstractCommand;
 import org.rm3l.now4j.cli.subcommand.aliases.CommandAliases;
 import org.rm3l.now4j.cli.subcommand.certs.CommandCertificates;
@@ -33,7 +34,7 @@ import org.rm3l.now4j.cli.subcommand.secrets.CommandSecrets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NowCLI {
+public class Now {
 
     private static final Map<String, AbstractCommand> commandMap = new HashMap<>();
 
@@ -52,8 +53,8 @@ public class NowCLI {
     public static void main(String... argv) throws Exception {
 
         //Attempt to determine verbose level first
-        final NowCLI nowCLI = new NowCLI();
-        JCommander.newBuilder().addObject(nowCLI)
+        final Now now = new Now();
+        JCommander.newBuilder().addObject(now)
                 .acceptUnknownOptions(true)
                 .build().parse(argv);
 
@@ -61,7 +62,7 @@ public class NowCLI {
 
         final JCommander.Builder commanderBuilder = JCommander.newBuilder()
                 .programName("java -jar now4j-uberjar.jar")
-                .verbose(nowCLI.verboseLevel)
+                .verbose(now.verboseLevel)
                 .addObject(commandMain);
         for (final Map.Entry<String, AbstractCommand> commandEntry : commandMap.entrySet()) {
             commanderBuilder.addCommand(commandEntry.getKey(), commandEntry.getValue());
