@@ -61,7 +61,7 @@ public class Now {
         final CommandMain commandMain = new CommandMain();
 
         final JCommander.Builder commanderBuilder = JCommander.newBuilder()
-                .programName("java -jar now4j-uberjar.jar")
+                .programName("java -jar now4j-cli-<version>.jar")
                 .verbose(now.verboseLevel)
                 .addObject(commandMain);
         for (final Map.Entry<String, AbstractCommand> commandEntry : commandMap.entrySet()) {

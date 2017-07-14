@@ -35,6 +35,9 @@ buildscript {
 }
 
 subprojects {
+    group 'org.rm3l'
+    version '1.0.0-rc2'
+
     apply plugin: 'java'
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'com.github.dcendents.android-maven'

@@ -17,8 +17,6 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-group 'org.rm3l'
-version '1.0.0-rc2'
 description 'Java CLI for the Now API. Uses now4j library.'
 
 sourceSets {
@@ -84,5 +82,5 @@ integrationTest.mustRunAfter test
 final Closure bintrayConfig = rootProject.getBintrayConfig(
         'now4j-cli',
         ['now', 'java', 'cli'],
-        'Java CLI for the Now API')
+        description)
 bintray bintrayConfig

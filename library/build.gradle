@@ -16,8 +16,7 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-group 'org.rm3l'
-version '1.0.0-rc2'
+
 description 'Unofficial Java client for the Now API'
 
 dependencies {
@@ -28,5 +27,5 @@ dependencies {
 final Closure bintrayConfig = rootProject.getBintrayConfig(
         'now4j',
         ['now', 'java', 'library'],
-        'Unofficial Java client for the Now API')
+        description)
 bintray bintrayConfig
