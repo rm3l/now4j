@@ -142,7 +142,7 @@ Visit [https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0/javadoc](https://jit
 
 Download the CLI binary [here](https://github.com/rm3l/now4j/releases/download/1.0.0/now4j-cli-1.0.0.jar).
 
-<details><summary>java -jar now4j-cli-1.0.0.jar --help</summary><p>
+<details><summary>java -jar now4j-cli-1.0.0.jar --help</summary>
 
 ```bash
 Usage: java -jar now4j-cli-<version>.jar [options] [command] [command options]
@@ -287,7 +287,7 @@ Usage: java -jar now4j-cli-<version>.jar [options] [command] [command options]
             Default: false
 ```
 
-</p></details>
+</details>
 
 ## Building from source
 
