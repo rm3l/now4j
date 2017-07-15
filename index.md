@@ -145,7 +145,7 @@ Download the CLI binary [here](https://github.com/rm3l/now4j/releases/download/1
 <details><summary>java -jar now4j-cli-1.0.0.jar --help</summary>
 
 ```bash
-Usage: java -jar now4j-cli-<version>.jar [options] [command] [command options]
+Usage: java -jar now4j-cli-VERSION.jar [options] [command] [command options]
   Options:
     --token, --T
       Now API Token. Read from ~/.now.json if not specified here.
