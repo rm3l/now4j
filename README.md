@@ -31,17 +31,78 @@ A standalone Command Line Interface (CLI) app is also available for you to manip
 
 ### Installation
 
-#### With Gradle
+[comment]: <> (`now4j` is published on both Bintray JCenter and Jitpack.)
+`now4j` is published on Bintray JCenter.
 
-Add it as a gradle dependency in your `build.gradle`
+##### With Gradle
+
+<!--
+Make sure you have either JCenter or Jitpack to your list of repositories in your root `build.gradle`:
+
+```groovy
+allprojects {
+    repositories {
+        //...
+        jcenter()                           //To download via JCenter
+        maven { url "https://jitpack.io" }  //To download via Jitpack
+    }
+}
+```
+-->
+Make sure you have JCenter added to the list of repositories in your root `build.gradle`:
+
+```groovy
+allprojects {
+    repositories {
+        //...
+        jcenter()
+    }
+}
+```
+
+Then add `now4j` as a gradle dependency in your `build.gradle`
 
 ```groovy
 compile 'org.rm3l:now4j:1.0.0-rc2'
 ```
 
-#### With Maven
+##### With Maven
 
-Add the following dependency to your `pom.xml` dependencies
+<!--
+Make sure you have either Jcenter or Jitpack to your list of repositories in your `pom.xml`:
+
+```xml
+<repositories>
+    <!-- ... -->
+
+    <!-- To download via JCenter -->
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+
+    <!-- To download via Jitpack -->
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+-->
+Make sure you have Jcenter added to your list of repositories in your `pom.xml`:
+
+```xml
+<repositories>
+    <!-- ... -->
+
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+</repositories>
+```
+
+Then add `now4j` to your `pom.xml` dependencies:
 
 ```xml
 <dependency>
@@ -80,15 +141,188 @@ Note that all the methods in `NowClient` are overloaded and come under two forms
  
 ### Javadoc
 
-TODO
+Visit [https://jitpack.io/com/github/rm3l/now4j/1.0.0-rc2/javadoc](https://jitpack.io/com/github/rm3l/now4j/1.0.0-rc2/javadoc/)
  
 ## Command Line Interface (CLI)
 
-TODO
+Download the CLI binary [here](https://github.com/rm3l/now4j/releases/download/1.0.0-rc2/now4j-cli-1.0.0-rc2.jar).
 
-## Contributing
+<details><summary>java -jar now4j-cli-1.0.0-rc2.jar --help</summary><p>
 
-TODO
+```bash
+Usage: java -jar now4j-cli-<version>.jar [options] [command] [command options]
+  Options:
+    --token, --T
+      Now API Token. Read from ~/.now.json if not specified here.
+    --team, --t
+      Now API Team. Read from ~/.now.json if not specified here.
+    --debug, -d
+      Debug mode
+      Default: false
+    --help, -h
+      Show this help
+  Commands:
+    deployments      Manage deployments
+      Usage: deployments [options]
+        Options:
+          --deploymentData
+            JSON-serialized description of the deployment to add. The keys 
+            should represent a file path, with their respective values 
+            containing the file contents.
+          --deploymentId
+            ID of deployment
+          --fileId
+            ID of file
+          -add
+            Perform a deployment. Required: --deploymentData
+            Default: false
+          -getFile, -dl
+            Get file content. Required: --deploymentId and --fileId
+            Default: false
+          -list, -ls
+            List deployments. Optional: --deploymentId
+            Default: false
+          -listFiles, -lsFiles
+            List file structure of deployment. Required: --deploymentId
+            Default: false
+          -remove, -rm, -delete, -del
+            Remove a deployment. Required: --deploymentId
+            Default: false
+
+    aliases      Manage aliases
+      Usage: aliases [options]
+        Options:
+          --alias
+            Hostname or custom url for the alias
+          --aliasId
+            ID of Alias
+          --deploymentId
+            ID of Deployment
+          -add, -create
+            Create a new alias. Required: --deploymentId and --alias
+            Default: false
+          -list, -ls
+            List aliases. Optional: --deploymentId
+            Default: false
+          -remove, -rm, -delete, -del
+            Remove an alias. Required: --aliasId
+            Default: false
+
+    domains      Manage domains
+      Usage: domains [options]
+        Options:
+          --domainName
+            Name of domain
+          --externalDNS
+            Indicates whether the domain is an external DNS or not
+            Default: false
+          --recordData
+            JSON-serialized description of the domain record to add.
+          --recordId
+            ID of Domain Record
+          -add
+            Add a new domain. Required: --domainName . Optional: --externalDNS
+            Default: false
+          -addRecord
+            Add a new domain record. Required: --domainName and --recordData
+            Default: false
+          -list, -ls
+            List domains
+            Default: false
+          -listRecords, -lsr
+            List domain records. Required: --domainName
+            Default: false
+          -remove, -rm, -delete, -del
+            Remove a domain. Required: --domainName
+            Default: false
+          -removeRecord, -rmr, -deleteRecord, -delr
+            Remove a domain record. Required: --domainName and --recordId
+            Default: false
+
+    certs      Manage certificates
+      Usage: certs [options]
+        Options:
+          --certificate, --cert
+            CA certificate chain
+          --commonName, --cn
+            Common Name (CN)
+          --domain
+            The domain.
+            Default: []
+          --key
+            Private key for the certificate
+          --x509, --ca
+            X.509 certificate
+          -add, -create
+            Create a new certificate
+            Default: false
+          -list, -ls
+            List certificates. Required: --cn
+            Default: false
+          -remove, -rm, -delete, -del
+            Remove a certificate. Required: --cn
+            Default: false
+          -renew
+            Renew certificate for domains
+            Default: false
+          -replace
+            Replace certificate for domains
+            Default: false
+
+    secrets      Manage secrets
+      Usage: secrets [options]
+        Options:
+          --secretName, --name
+            Secret name
+          --secretUid, --uid
+            UID of Secret
+          --secretValue, --value
+            Secret value
+          -add, -create
+            Create a new secret. Required: --name and --value
+            Default: false
+          -list, -ls
+            List secrets
+            Default: false
+          -remove, -rm, -delete, -del
+            Remove a secret. Required: --name or --uid
+            Default: false
+          -rename
+            Rename a secret. Required: --uid and --name
+            Default: false
+```
+
+</p></details>
+
+## Building from source
+
+You can build `now4j` in the same way as any Gradle project on Git.
+
+However, thanks to the [Gradle Wrapper](https://docs.gradle.org/3.3/userguide/gradle_wrapper.html) (cf. `gradlew` and `gradlew.bat` scripts), 
+you do not need to have Gradle installed on your machine.
+
+1. Clone the `now4j` repository on your machine:
+```bash
+git clone https://github.com/rm3l/now4j && cd now4j
+```
+2. Switch to the appropriate branch if needed with `git checkout ...`
+3. Execute a Gradle build in the directory containing the `build.gradle` file:
+```bash
+./gradlew build
+```
+4. You will find the artifacts under `library/build/libs` and `cli/build/libs` directories
+
+## Contributing and Improving Now4J!
+
+Contributions and issue reporting are more than welcome. 
+So to help out, do feel free to fork this repo and open up a pull request. 
+I'll review and merge your changes as quickly as possible.
+
+You can use [GitHub issues](https://github.com/rm3l/now4j/issues) to report bugs. 
+However, please make sure your description is clear enough and has sufficient instructions 
+to be able to reproduce the issue.
+
+[comment]: <> (See CONTRIBUTING.md for more on contributing to this Github project.)
 
 ## LICENSE
 
