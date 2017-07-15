@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 Logger logger = LoggerFactory.getLogger('now4j-parent')
 
 def artifactGroupId = 'org.rm3l'
-def artifactVersion = '1.0.0-rc3'
+def artifactVersion = '1.0.0'
 
 buildscript {
     repositories {

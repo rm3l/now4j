@@ -63,7 +63,7 @@ allprojects {
 Then add `now4j` as a gradle dependency in your `build.gradle`
 
 ```groovy
-compile 'org.rm3l:now4j:1.0.0-rc3'
+compile 'org.rm3l:now4j:1.0.0'
 ```
 
 ##### With Maven
@@ -103,7 +103,7 @@ Then add `now4j` to your `pom.xml` dependencies:
 <dependency>
     <groupId>org.rm3l</groupId>
     <artifactId>now4j</artifactId>
-    <version>1.0.0-rc3</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -136,13 +136,13 @@ Note that all the methods in `NowClient` are overloaded and come under two forms
  
 ### Javadoc
 
-Visit [https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0-rc3/javadoc](https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0-rc3/javadoc/index.html)
+Visit [https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0/javadoc](https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0/javadoc/index.html)
  
 ## Command Line Interface (CLI)
 
-Download the CLI binary [here](https://github.com/rm3l/now4j/releases/download/1.0.0-rc3/now4j-cli-1.0.0-rc3.jar).
+Download the CLI binary [here](https://github.com/rm3l/now4j/releases/download/1.0.0/now4j-cli-1.0.0.jar).
 
-<details><summary>java -jar now4j-cli-1.0.0-rc3.jar --help</summary><p>
+<details><summary>java -jar now4j-cli-1.0.0.jar --help</summary><p>
 
 ```bash
 Usage: java -jar now4j-cli-<version>.jar [options] [command] [command options]
