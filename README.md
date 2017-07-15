@@ -73,15 +73,10 @@ Make sure you have either Jcenter or Jitpack to your list of repositories in you
 
 ```xml
 <repositories>
-    <!-- ... -->
-
-    <!-- To download via JCenter -->
     <repository>
       <id>jcenter</id>
       <url>https://jcenter.bintray.com/</url>
     </repository>
-
-    <!-- To download via Jitpack -->
     <repository>
         <id>jitpack.io</id>
         <url>https://jitpack.io</url>
