@@ -57,24 +57,27 @@ subprojects {
         compile 'org.jetbrains:annotations:15.0'
     }
 
-    task generateSourcesJar(type: Jar) {
-        classifier 'sources'
+    javadoc {
+        failOnError  false
+        source = sourceSets.main.java.srcDirs
+        classpath += configurations.compile
     }
 
-    task generateJavadocs(type: Javadoc) {
-        failOnError false
+    // build a jar with source files
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.java.srcDirs
+        classifier = 'sources'
     }
 
-    task generateJavadocsJar(type: Jar) {
-        from generateJavadocs.destinationDir
-        classifier 'javadoc'
+    // build a jar with javadoc
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
     }
-
-    generateJavadocsJar.dependsOn generateJavadocs
 
     artifacts {
-        archives generateJavadocsJar
-        archives generateSourcesJar
+        archives sourcesJar
+        archives javadocJar
     }
 }
 
