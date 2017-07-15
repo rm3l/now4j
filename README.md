@@ -136,7 +136,7 @@ Note that all the methods in `NowClient` are overloaded and come under two forms
  
 ### Javadoc
 
-Visit [https://jitpack.io/com/github/rm3l/now4j/1.0.0-rc3/javadoc](https://jitpack.io/com/github/rm3l/now4j/1.0.0-rc3/javadoc/)
+Visit [https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0-rc3/javadoc](https://jitpack.io/com/github/rm3l/now4j/now4j/1.0.0-rc3/javadoc/index.html)
  
 ## Command Line Interface (CLI)
 
@@ -318,6 +318,22 @@ However, please make sure your description is clear enough and has sufficient in
 to be able to reproduce the issue.
 
 [comment]: <> (See CONTRIBUTING.md for more on contributing to this Github project.)
+
+
+## Credits
+
+* [Retrofit](http://square.github.io/retrofit/), by [Square](http://square.github.io/)
+* [JCommander](https://github.com/cbeust/jcommander), by [Cédric Beust](http://jcommander.org/)
+
+
+## Developed by
+
+* Armel Soro
+  * [keybase.io/rm3l](https://keybase.io/rm3l)
+  * [rm3l.org](https://rm3l.org) - &lt;apps+now4j@rm3l.org&gt; - [@rm3l](https://twitter.com/rm3l)
+  * [paypal.me/rm3l](https://paypal.me/rm3l)
+  * [coinbase.com/rm3l](https://www.coinbase.com/rm3l)
+
 
 ## LICENSE
 
