@@ -10,6 +10,27 @@
 [![GitHub stars](https://img.shields.io/github/stars/rm3l/now4j.svg?style=social&label=Star)](https://github.com/rm3l/now4j) 
 [![GitHub forks](https://img.shields.io/github/forks/rm3l/now4j.svg?style=social&label=Fork)](https://github.com/rm3l/now4j)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [What is it?](#what-is-it)
+- [Library](#library)
+  - [Installation](#installation)
+      - [With Gradle](#with-gradle)
+      - [With Maven](#with-maven)
+  - [Usage](#usage)
+  - [Javadoc](#javadoc)
+- [Command Line Interface (CLI)](#command-line-interface-cli)
+- [Building from source](#building-from-source)
+- [Contributing and Improving Now4J!](#contributing-and-improving-now4j)
+- [Credits](#credits)
+- [Developed by](#developed-by)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
 ## What is it?
 
 Zeit's [Now](https://zeit.co/now) is a service allowing to deploy an application 
