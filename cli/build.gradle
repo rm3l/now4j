@@ -38,7 +38,7 @@ configurations {
 dependencies {
     compile project(':now4j')
     compile 'com.google.code.gson:gson:2.8.6'
-    compile 'com.beust:jcommander:1.72'
+    compile 'com.beust:jcommander:1.78'
 }
 
 //create a single Jar with all dependencies
